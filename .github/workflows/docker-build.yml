@@ -67,13 +67,4 @@ jobs:
           cache-to: type=gha,mode=max
 
       # Run Docker container locally and expose port for viewing the app
-      - name: Run Docker container
-        run: |
-          docker run -d -p ${{ env.LOCAL_PORT }}:8080 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tags }}
-          echo "Container is running on port 8080"
-        if: github.event_name != 'pull_request'
-
-      # Optional: Show link to access the app (you can access this only in the GitHub runner environment)
-      - name: Display Access Link
-        run: |
-          echo "Access your application on port ${{ env.LOCAL_PORT }} at http://localhost:${{ env.LOCAL_PORT }}"
+      
