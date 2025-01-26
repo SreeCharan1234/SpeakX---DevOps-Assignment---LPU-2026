@@ -72,4 +72,4 @@ jobs:
           source: './'
 
       - name: Show Cloud Run URL
-        run: echo "Cloud Run URL: ${{ steps.deploy.outputs.url }}"
+        run : echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --key ${{ secrets.COSIGN_KEY }}
