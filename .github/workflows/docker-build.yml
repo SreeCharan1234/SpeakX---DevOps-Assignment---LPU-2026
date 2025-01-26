@@ -12,7 +12,7 @@ env:
   REGION: 'asia-south1'
   SERVICE: 'study'
   REGISTRY: 'ghcr.io'
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: sreecharan1234/speakx-devops-assignment-lpu-a2026 # Updated to lowercase
   LOCAL_PORT: 8080  # Port exposed for viewing the application
 
 jobs:
