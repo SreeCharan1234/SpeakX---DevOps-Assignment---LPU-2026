@@ -2,7 +2,7 @@ name: Deploy to Cloud Run
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: sreecharan1234/speakx-devops-assignment-lpu-a2026
   PROJECT_ID: "vigilant-guru-449011-m1"
 
 on:
