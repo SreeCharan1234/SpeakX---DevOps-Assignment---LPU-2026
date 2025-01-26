@@ -32,16 +32,6 @@ jobs:
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/setup-gcloud@v2'
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        
-        with:
-          workload_identity_provider: 'projects/110187298432/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'my-service-account@vigilant-guru-449011-m1.iam.gserviceaccount.com'
-
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
@@ -102,7 +92,12 @@ jobs:
 
 
 
-      
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: 'my-service-account@vigilant-guru-449011-m1.iam.gserviceaccount.com'
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
