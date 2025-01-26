@@ -42,7 +42,6 @@ aiortc
 flask
 flask-socketio
 streamlit_chat
-
 mysql-connector-python
 pdf2image
 pygments
