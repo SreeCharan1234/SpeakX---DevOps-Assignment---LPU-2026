@@ -3,6 +3,7 @@
 This repository demonstrates how to deploy a secure, scalable backend for a mobile application on the cloud. The solution implements infrastructure provisioning, backend containerization, secure configurations, and automated CI/CD pipelines. The setup is designed with best practices to ensure reliability and security.
 
 ---
+![image](https://github.com/user-attachments/assets/825f1ea3-39bc-433d-a271-0730386ce37a)
 
 ## Features
 
