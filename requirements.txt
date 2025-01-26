@@ -47,4 +47,5 @@ pdf2image
 pygments
 graphviz
 networkx
+
 toml
