@@ -3,109 +3,72 @@ name: 'Cloud Run Deploy and Docker Build'
 on:
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
-  schedule:
-    - cron: '25 8 * * *'
   pull_request:
     branches: [ "main" ]
 
 env:
-  PROJECT_ID: 'vigilant-guru-449011-m1' # TODO: update to your Google Cloud project ID
-  REGION: 'asia-south1' # TODO: update to your region
-  SERVICE: 'study' # TODO: update to your service name
-  REGISTRY: ghcr.io # Use docker.io for Docker Hub if empty
-  IMAGE_NAME: ${{ github.repository }} # github.repository as <account>/<repo>
+  PROJECT_ID: 'vigilant-guru-449011-m1'
+  REGION: 'asia-south1'
+  SERVICE: 'study'
+  REGISTRY: 'ghcr.io'
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
       packages: write
+      id-token: write
 
     steps:
-      # Checkout source code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Docker: Set up Buildx for multi-platform builds
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.0.0
+        uses: docker/setup-buildx-action@v3
 
-      # Docker: Log into the registry
-      - name: Log into registry ${{ env.REGISTRY }}
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3.0.0
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Docker: Extract metadata for the image
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v5.0.0
+        uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ghcr.io/${{ env.IMAGE_NAME }}
 
-      
-      - name: Install cosign
-            if: github.event_name != 'pull_request'
-            uses: sigstore/cosign-installer@59acb6260d9c0ba8f4a2f9d9b48431a222b68e20 #v3.5.0
-            with:
-              cosign-release: 'v2.2.4'
-      # Verify Cosign installation and check PATH
-      - name: Verify Cosign Installation
-        run: |
-          echo "Verifying Cosign installation..."
-          which cosign
-          cosign version
-          echo $PATH
-
-      # Add Cosign to PATH (if not automatically added)
-      - name: Add Cosign to PATH
-        run: |
-          export PATH="$PATH:$HOME/.cosign"
-          echo "PATH updated: $PATH"
-          which cosign
-          cosign version
-      # Docker: Build and push the image
       - name: Build and push Docker image
-        id: build-and-push
-        uses: docker/build-push-action@v5.0.0
+        uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
-      # Docker: Sign the image (except for pull requests)
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
+      - name: Sign the Docker image
         env:
-          TAGS: ${{ steps.meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --key ${{ secrets.COSIGN_KEY }}
 
-      # Google Cloud: Authenticate using Workload Identity Federation
       - id: auth
-        name: Authenticate  to Google Cloud
+        name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # TODO: replace with your workload identity provider
+          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          service_account: 'my-service-account@vigilant-guru-449011-m1.iam.gserviceaccount.com'
 
-      # Google Cloud: Deploy to Cloud Run
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: '${{ env.SERVICE }}'
-          region: '${{ env.REGION }}'
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
           source: './'
 
-      # Output the Cloud Run URL
       - name: Show Cloud Run URL
-        run: echo ${{ steps.deploy.outputs.url }}
+        run: echo "Cloud Run URL: ${{ steps.deploy.outputs.url }}"
