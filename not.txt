@@ -92,19 +92,5 @@ jobs:
 
 
 
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-          service_account: 'my-service-account@vigilant-guru-449011-m1.iam.gserviceaccount.com'
-
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: ${{ env.SERVICE }}
-          region: ${{ env.REGION }}
-          source: './'
-
       - name: Show Cloud Run URL
         run : echo "${{ steps.meta.outputs.tags }}" | xargs -I {} cosign sign --key ${{ secrets.COSIGN_KEY }}
