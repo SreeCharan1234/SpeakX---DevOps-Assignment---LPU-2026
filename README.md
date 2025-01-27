@@ -3,6 +3,7 @@
 This repository demonstrates how to deploy a secure, scalable backend for a mobile application on the cloud. The solution implements infrastructure provisioning, backend containerization, secure configurations, and automated CI/CD pipelines. The setup is designed with best practices to ensure reliability and security.
 
 ---
+![image](https://github.com/user-attachments/assets/825f1ea3-39bc-433d-a271-0730386ce37a)
 
 ## Features
 
@@ -33,6 +34,10 @@ This repository demonstrates how to deploy a secure, scalable backend for a mobi
 ## Architecture Overview
 
 ![Architecture Diagram](link_to_architecture_diagram.png)
+![image](https://github.com/user-attachments/assets/bf3fc163-0ffd-4365-bfc7-c3f4cc2d9ba1)
+![image](https://github.com/user-attachments/assets/43dd6bd3-f3ab-419b-a247-69d2bda6f2f2)
+docker pull sreecharan94848/streamlit-app
+
 
 ### Textual Description:
 - **Infrastructure:**  
