@@ -5,7 +5,7 @@ This repository demonstrates how to deploy a secure, scalable backend for a mobi
 ---
 ![image](https://github.com/user-attachments/assets/825f1ea3-39bc-433d-a271-0730386ce37a)
 
-## Features
+## Featur es
 
 1. **Infrastructure as Code (IaC):**
    - Provisioned cloud infrastructure using [Terraform/CloudFormation/Ansible].
